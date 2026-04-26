@@ -17,7 +17,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  const html = fs.readFileSync(path.join(process.cwd(), 'src', 'ui', 'landing.html'), 'utf-8');
+  const html = fs.readFileSync(path.join(process.cwd(), 'dist', 'ui', 'landing.html'), 'utf-8');
   res.type('html').send(html);
 });
 

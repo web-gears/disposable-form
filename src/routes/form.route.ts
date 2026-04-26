@@ -4,14 +4,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 function getFormHtml(sessionId: string, config: object): string {
-  let html = fs.readFileSync(path.join(process.cwd(), 'src', 'ui', 'index.html'), 'utf-8');
+  let html = fs.readFileSync(path.join(process.cwd(), 'dist', 'ui', 'index.html'), 'utf-8');
   const scriptTag = `<script>window.__FORM_CONFIG__ = ${JSON.stringify(config)}; window.__SESSION_ID__ = "${sessionId}";</script>`;
   html = html.replace('<!-- injected-config -->', scriptTag);
   return html;
 }
 
 function getErrorHtml(code: string, message: string, description: string): string {
-  let html = fs.readFileSync(path.join(process.cwd(), 'src', 'ui', 'error.html'), 'utf-8');
+  let html = fs.readFileSync(path.join(process.cwd(), 'dist', 'ui', 'error.html'), 'utf-8');
   const scriptTag = `<script>window.__ERROR_CODE__ = "${code}"; window.__ERROR_MESSAGE__ = "${message}"; window.__ERROR_DESCRIPTION__ = "${description}";</script>`;
   html = html.replace('<!-- injected-script -->', scriptTag);
   return html;
