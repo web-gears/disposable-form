@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Support } from './Support';
 
 interface FormField {
   id: string;
@@ -198,6 +199,7 @@ export function FormApp() {
         <h2>Form Submitted</h2>
         <p>Your response has been recorded.</p>
         <p className="timeout-note">This form will expire in {timeout} seconds</p>
+        <Support />
       </div>
     );
   }
@@ -226,6 +228,7 @@ export function FormApp() {
         <button type="submit" disabled={submitting}>
           {submitting ? 'Submitting...' : 'Submit'}
         </button>
+        <Support />
       </form>
     </div>
   );

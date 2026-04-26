@@ -4,7 +4,10 @@
   "scripts": {
     "build": "npm run build:server && npm run build:ui",
     "build:server": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --external:esbuild",
-    "build:ui": "esbuild src/ui/FormRenderer.tsx --bundle --format=iife --global-name=FormApp --outfile=dist/ui/bundle.js",
+    "build:ui": "npm run build:form && npm run build:landing && npm run build:error",
+    "build:form": "esbuild src/ui/FormRenderer.tsx --bundle --format=iife --global-name=FormApp --outfile=dist/ui/bundle.js",
+    "build:landing": "esbuild src/ui/Landing.tsx --bundle --format=iife --global-name=LandingApp --outfile=dist/ui/landing.js",
+    "build:error": "esbuild src/ui/ErrorPage.tsx --bundle --format=iife --global-name=ErrorApp --outfile=dist/ui/error.js",
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.cjs",
     "test": "vitest run",
