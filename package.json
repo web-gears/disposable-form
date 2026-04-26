@@ -1,11 +1,11 @@
 {
   "name": "form-session-service",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "scripts": {
     "build": "npm run build:server && npm run build:ui",
     "build:server": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --external:esbuild",
     "build:ui": "npm run build:form && npm run build:landing && npm run build:error && npm run copy:html",
-    "copy:html": "cp src/ui/landing.html src/ui/error.html src/ui/index.html src/ui/favicon.svg dist/ui/",
+    "copy:html": "cp src/ui/landing.html src/ui/error.html src/ui/index.html src/ui/styles.css src/ui/favicon.svg dist/ui/",
     "build:form": "esbuild src/ui/FormRenderer.tsx --bundle --format=iife --global-name=FormApp --outfile=dist/ui/bundle.js",
     "build:landing": "esbuild src/ui/Landing.tsx --bundle --format=iife --global-name=LandingApp --outfile=dist/ui/landing.js",
     "build:error": "esbuild src/ui/ErrorPage.tsx --bundle --format=iife --global-name=ErrorApp --outfile=dist/ui/error.js",

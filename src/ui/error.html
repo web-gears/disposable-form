@@ -4,88 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/ui/favicon.svg">
+  <link rel="stylesheet" href="/ui/styles.css">
   <title>Error - Disposable Form</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
-      background: #0d1117;
-      color: #c9d1d9;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .error-container {
-      background: #161b22;
-      border: 1px solid #30363d;
-      padding: 40px;
-      border-radius: 6px;
-      max-width: 420px;
-      text-align: center;
-    }
-    .error-code {
-      font-size: 48px;
-      font-weight: 400;
-      margin: 0 0 8px;
-      color: #f85149;
-    }
-    .error-code::before {
-      content: 'ERR_';
-      color: #8b949e;
-    }
-    .error-message {
-      font-size: 16px;
-      color: #c9d1d9;
-      margin: 0 0 16px;
-    }
-    .error-message::before {
-      content: '// ';
-      color: #6e7681;
-    }
-    .error-description {
-      font-size: 13px;
-      color: #8b949e;
-      margin: 0 0 24px;
-    }
-    .landing-link {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #238636;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-    .landing-link:hover {
-      background: #2ea043;
-    }
-    .support-container {
-      margin-top: 32px;
-      padding-top: 20px;
-      border-top: 1px solid #30363d;
-    }
-    .support-link {
-      display: inline-block;
-      padding: 8px 14px;
-      background: transparent;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      color: #8b949e;
-      text-decoration: none;
-      font-size: 12px;
-      transition: all 0.2s;
-    }
-    .support-link:hover {
-      border-color: #58a6ff;
-      color: #58a6ff;
-    }
-  </style>
 </head>
 <body>
   <div id="root"></div>

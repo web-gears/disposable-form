@@ -10,14 +10,18 @@ A temporary form service that auto-deletes after expiration. Perfect for one-tim
 - Client-side validation
 - Session-based access
 
-## API
+## Routes
 
-**Production URL:** https://disposable.webgears.org/
+### GET /
 
-### Create Form
+Landing page. Enter a session ID to access your form.
+
+### POST /create
+
+Create a new form session.
 
 ```bash
-curl -X POST https://disposable.webgears.org/create \
+curl -X POST localhost:3000/create \
   -H "Content-Type: application/json" \
   -d '{
     "sessionId": "my-session-id",
@@ -29,18 +33,40 @@ curl -X POST https://disposable.webgears.org/create \
   }'
 ```
 
-### Submit Form
-
-```bash
-curl -X POST https://disposable.webgears.org/my-session-id/submit \
-  -H "Content-Type: application/json" \
-  -d '{
-    "values": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    }
-  }'
+Response:
+```json
+{
+  "sessionId": "my-session-id",
+  "formUrl": "http://localhost:3000/my-session-id",
+  "expiresAt": "2026-04-26T13:00:00.000Z"
+}
 ```
+
+### GET /:sessionId
+
+View and fill the form. Sessions auto-delete after expiration.
+
+### GET /result/:sessionId
+
+View submitted form results.
+
+Response (200 OK):
+```json
+{
+  "sessionId": "my-session-id",
+  "submittedAt": "2026-04-26T12:00:00.000Z",
+  "expiresAt": "2026-04-26T13:00:00.000Z",
+  "values": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+}
+```
+
+Error responses:
+- `404`: Session not found
+- `410`: Session expired
+- `202`: Form not yet submitted
 
 ## Development
 
