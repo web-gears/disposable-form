@@ -20,5 +20,5 @@ export function createRoute(req: Request, res: Response): void {
     return;
   }
 
-  res.status(201).type('application/json').json(result);
+  res.status(200).type('application/json').json(result);
 }
