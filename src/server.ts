@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { createRoute } from './routes/create.route.js';
 import { formRoute } from './routes/form.route.js';
 import { submitRoute } from './routes/submit.route.js';
@@ -8,6 +9,7 @@ import * as path from 'path';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use('/ui', express.static('./dist/ui'));
 app.use('/ui', express.static('./src/ui'));
