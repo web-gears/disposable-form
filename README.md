@@ -63,6 +63,29 @@ Response (200 OK):
 }
 ```
 
+### GET /health
+
+Health check endpoint. Returns `{ "status": "ok" }`.
+
+### GET /stats
+
+Stats page with UI showing active sessions, today/week/month totals, total sessions, and uptime.
+
+### GET /get-stats
+
+Get stats as JSON.
+
+```json
+{
+  "activeSessions": 5,
+  "sessionsToday": 10,
+  "sessionsWeek": 25,
+  "sessionsMonth": 100,
+  "totalSessions": 150,
+  "uptimeSeconds": 3600
+}
+```
+
 Error responses:
 - `404`: Session not found
 - `410`: Session expired

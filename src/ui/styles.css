@@ -20,6 +20,8 @@ body {
   max-width: 420px;
   width: 100%;
 }
+.landing-container h1::before { content: '~/$ '; color: #8b949e; }
+
 .error-container {
   background: #161b22;
   border: 1px solid #30363d;
@@ -99,3 +101,10 @@ header h1 { margin: 0; font-size: 16px; }
 .support-container { margin-top: 32px; padding-top: 20px; border-top: 1px solid #30363d; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .support-link { display: inline-block; padding: 8px 14px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; text-decoration: none; font-size: 12px; transition: all 0.2s; }
 .support-link:hover { border-color: #58a6ff; color: #58a6ff; }
+.stats-container { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 40px; max-width: 480px; width: 100%; }
+.stats-container h1 { font-size: 18px; font-weight: 400; margin: 0 0 32px; color: #58a6ff; }
+.stats-container h1::before { content: '~/disposable-form/$ '; color: #8b949e; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.stat-item { text-align: center; padding: 16px; background: #0d1117; border-radius: 6px; }
+.stat-value { font-size: 24px; font-weight: 400; color: #c9d1d9; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: #6e7681; text-transform: uppercase; }

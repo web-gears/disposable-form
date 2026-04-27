@@ -5,14 +5,28 @@ import type {
   SessionResponse
 } from '../types/index.js';
 
+interface SessionStats {
+  activeSessions: number;
+  sessionsToday: number;
+  sessionsWeek: number;
+  sessionsMonth: number;
+  totalSessions: number;
+}
+
 export class SessionService {
   private store = new Map<string, SessionEntry>();
+  private startTime = new Date();
+  private stats = {
+    created: 0,
+    submitted: 0,
+  };
 
   create(req: CreateFormRequest, baseUrl: string): CreateFormResponse | { error: 'DUPLICATE' } {
     if (this.store.has(req.sessionId)) {
       return { error: 'DUPLICATE' };
     }
 
+    this.stats.created++;
     const timeoutSeconds = req.timeoutSeconds ?? 60;
     const now = new Date();
     const expiresAt = new Date(now.getTime() + timeoutSeconds * 1000);
@@ -59,6 +73,7 @@ export class SessionService {
 
     entry.values = values;
     entry.submittedAt = new Date();
+    this.stats.submitted++;
 
     return { ok: true };
   }
@@ -86,6 +101,32 @@ export class SessionService {
         expiresAt: entry.expiresAt.toISOString(),
         values: entry.values!,
       },
+    };
+  }
+
+  getStats(): SessionStats {
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(startOfDay);
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    let sessionsDay = 0;
+    let sessionsWeek = 0;
+    let sessionsMonth = 0;
+
+    for (const entry of this.store.values()) {
+      if (entry.createdAt >= startOfDay) sessionsDay++;
+      if (entry.createdAt >= startOfWeek) sessionsWeek++;
+      if (entry.createdAt >= startOfMonth) sessionsMonth++;
+    }
+
+    return {
+      activeSessions: this.store.size,
+      sessionsToday: sessionsDay,
+      sessionsWeek: sessionsWeek,
+      sessionsMonth: sessionsMonth,
+      totalSessions: this.stats.created,
     };
   }
 
