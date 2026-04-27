@@ -19,7 +19,6 @@ export function createRoute(req: Request, res: Response): void {
     res.status(409).json({ code: 'SESSION_EXISTS' });
     return;
   }
-  res.setHeader('Content-Type', 'application/json');
-
-  res.status(200).json(result);
+  
+  res.status(201).json(result);
 }
