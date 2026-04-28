@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Support } from './Support';
 
@@ -11,6 +11,12 @@ interface Stats {
   uptimeSeconds: number;
 }
 
+declare global {
+  interface Window {
+    __STATS__?: Stats;
+  }
+}
+
 function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
@@ -21,27 +27,7 @@ function formatUptime(seconds: number): string {
 }
 
 function StatsPage() {
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/get-stats')
-      .then(res => res.json())
-      .then(data => {
-        setStats(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="stats-container">
-        <h1>stats</h1>
-        <div className="loading">// loading...</div>
-      </div>
-    );
-  }
+  const stats = window.__STATS__ ?? null;
 
   if (!stats) {
     return (

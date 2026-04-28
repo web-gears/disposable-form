@@ -67,12 +67,13 @@ export class SessionService {
       return { error: 'NOT_FOUND' };
     }
 
-    if (entry.values !== null) {
+    if (entry.submittedAt !== null) {
       return { error: 'ALREADY_SUBMITTED' };
     }
 
     entry.values = values;
     entry.submittedAt = new Date();
+    clearTimeout(entry.timer);
     this.stats.submitted++;
 
     return { ok: true };
