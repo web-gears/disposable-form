@@ -60,7 +60,7 @@ function StatsPage() {
         </div>
         <div className="stat-item">
           <div className="stat-value">{stats.totalSessions}</div>
-          <div className="stat-label">total sessions</div>
+          <div className="stat-label">uptime total</div>
         </div>
         <div className="stat-item">
           <div className="stat-value">{formatUptime(stats.uptimeSeconds)}</div>
