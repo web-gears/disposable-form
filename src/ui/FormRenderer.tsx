@@ -127,6 +127,7 @@ export function FormApp() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [timeout, setTimeout_] = useState(0);
+  const [expired, setExpired] = useState(false);
 
   useEffect(() => {
     if (window.__FORM_CONFIG__) {
@@ -141,8 +142,10 @@ export function FormApp() {
         setTimeout_((t) => Math.max(0, t - 1));
       }, 1000);
       return () => clearInterval(timer);
+    } else if (timeout === 0 && config) {
+      setExpired(true);
     }
-  }, [timeout]);
+  }, [timeout, config]);
 
   const handleChange = (fieldId: string, value: unknown) => {
     setValues((prev) => ({ ...prev, [fieldId]: value }));
@@ -191,6 +194,18 @@ export function FormApp() {
   };
 
   if (!config) return <div className="loading">Loading form...</div>;
+
+  if (expired || timeout === 0) {
+    return (
+      <div className="error-container">
+        <div className="error-code">expired</div>
+        <div className="error-message">This form has expired</div>
+        <div className="error-description">The form is no longer accessible.</div>
+        <a href="/" className="landing-link">Go to Landing</a>
+        <Support />
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
