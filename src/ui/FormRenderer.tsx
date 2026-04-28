@@ -214,6 +214,7 @@ export function FormApp() {
         <h2>Form Submitted</h2>
         <p>Your response has been recorded.</p>
         <p className="timeout-note">This form will expire in {timeout} seconds</p>
+        <a href="/" className="landing-link">Go to Landing</a>
         <Support />
       </div>
     );
