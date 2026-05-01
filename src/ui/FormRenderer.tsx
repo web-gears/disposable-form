@@ -224,8 +224,8 @@ export function FormApp() {
     <div className="form-container">
       <header>
         <h1>Disposable Form</h1>
-        <div className="timeout">Expires in {timeout}s</div>
       </header>
+      <div className="timeout">{timeout}</div>
       <form onSubmit={handleSubmit}>
         {config.fields.map((field) => (
           <div key={field.id} className={`field-group ${errors[field.id] ? 'has-error' : ''}`}>
@@ -241,7 +241,7 @@ export function FormApp() {
             {errors[field.id] && <span className="error-msg">This field is required</span>}
           </div>
         ))}
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="submit-button" disabled={submitting}>
           {submitting ? 'Submitting...' : 'Submit'}
         </button>
         <Support />
