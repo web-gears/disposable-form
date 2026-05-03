@@ -19,6 +19,7 @@ export class SessionService {
   private stats = {
     created: 0,
     submitted: 0,
+    creationTimes: [] as Date[],
   };
 
   create(req: CreateFormRequest, baseUrl: string): CreateFormResponse | { error: 'DUPLICATE' } {
@@ -26,9 +27,11 @@ export class SessionService {
       return { error: 'DUPLICATE' };
     }
 
-    this.stats.created++;
-    const timeoutSeconds = req.timeoutSeconds ?? 60;
     const now = new Date();
+
+    this.stats.created++;
+    this.stats.creationTimes.push(now);
+    const timeoutSeconds = req.timeoutSeconds ?? 60;
     const expiresAt = new Date(now.getTime() + timeoutSeconds * 1000);
 
     const timer = setTimeout(() => {
@@ -116,10 +119,10 @@ export class SessionService {
     let sessionsWeek = 0;
     let sessionsMonth = 0;
 
-    for (const entry of this.store.values()) {
-      if (entry.createdAt >= startOfDay) sessionsDay++;
-      if (entry.createdAt >= startOfWeek) sessionsWeek++;
-      if (entry.createdAt >= startOfMonth) sessionsMonth++;
+    for (const createdAt of this.stats.creationTimes) {
+      if (createdAt >= startOfDay) sessionsDay++;
+      if (createdAt >= startOfWeek) sessionsWeek++;
+      if (createdAt >= startOfMonth) sessionsMonth++;
     }
 
     return {
