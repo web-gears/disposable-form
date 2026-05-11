@@ -23,7 +23,7 @@ function Landing() {
       <p className="subtitle">Enter a session ID to access your form</p>
       <form id="sessionForm" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="sessionId">Session ID</label>
+          <label htmlFor="sessionId">Session ID <span className="hint">(case sensitive)</span></label>
           <input
             type="text"
             id="sessionId"
