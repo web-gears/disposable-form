@@ -30,6 +30,7 @@ function Landing() {
             name="sessionId"
             placeholder="Enter session ID"
             value={sessionId}
+            autoFocus
             onChange={(e) => {
               setSessionId(e.target.value);
               setError('');
