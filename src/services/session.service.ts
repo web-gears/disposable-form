@@ -118,6 +118,11 @@ export class SessionService {
     let sessionsDay = 0;
     let sessionsWeek = 0;
     let sessionsMonth = 0;
+    let activeCount = 0;
+
+    for (const entry of this.store.values()) {
+      if (entry.expiresAt > now) activeCount++;
+    }
 
     for (const createdAt of this.stats.creationTimes) {
       if (createdAt >= startOfDay) sessionsDay++;
@@ -126,7 +131,7 @@ export class SessionService {
     }
 
     return {
-      activeSessions: this.store.size,
+      activeSessions: activeCount,
       sessionsToday: sessionsDay,
       sessionsWeek: sessionsWeek,
       sessionsMonth: sessionsMonth,
