@@ -63,7 +63,6 @@ export function validateFieldValues(
   }
 
   const valueMap = values.data;
-  const fieldMap = new Map(fields.map(f => [f.id, f]));
 
   for (const field of fields) {
     const value = valueMap[field.id];

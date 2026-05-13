@@ -38,11 +38,11 @@ function isLocalRequest(req: { ip?: string; get: (header: string) => string | un
 app.use('/ui', express.static('./dist/ui'));
 app.use('/ui', express.static('./src/ui'));
 
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/stats', (req, res) => {
+app.get('/stats', (_req, res) => {
   const stats = sessionService.getStats();
   const uptime = Math.floor((Date.now() - startTime.getTime()) / 1000);
   let html = fs.readFileSync(path.join(process.cwd(), 'dist', 'ui', 'stats.html'), 'utf-8');
@@ -75,7 +75,7 @@ app.get('/get-stats', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   const html = fs.readFileSync(path.join(process.cwd(), 'dist', 'ui', 'landing.html'), 'utf-8');
   res.type('html').send(html);
 });
@@ -85,7 +85,7 @@ app.get('/:sessionId', formRoute);
 app.post('/:sessionId/submit', submitLimiter, submitRoute);
 app.get('/result/:sessionId', resultRoute);
 
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
   res.setTimeout(10000, () => {
     res.status(408).json({ code: 'REQUEST_TIMEOUT' });
   });

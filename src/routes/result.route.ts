@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import type { EncryptedSessionResponse, SessionResponse } from '../types/index.js';
 import { sessionService } from '../services/session.service.js';
 
 export function resultRoute(req: Request, res: Response): void {

@@ -17,7 +17,6 @@ interface SessionStats {
 
 export class SessionService {
   private store = new Map<string, SessionEntry>();
-  private startTime = new Date();
   private stats = {
     created: 0,
     submitted: 0,
