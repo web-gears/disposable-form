@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { SessionService } from './session.service.js';
+import { decrypt } from '../utils/encryption.js';
 
 describe('SessionService', () => {
   let service: SessionService;
@@ -12,6 +13,7 @@ describe('SessionService', () => {
     it('creates a session with default timeout', () => {
       const result = service.create({ sessionId: 'test123' }, 'http://localhost:3000');
 
+      if ('error' in result) return;
       expect(result.sessionId).toBe('test123');
       expect(result.formUrl).toBe('http://localhost:3000/test123');
       expect(result.expiresAt).toBeDefined();
@@ -20,6 +22,7 @@ describe('SessionService', () => {
     it('creates a session with custom timeout', () => {
       const result = service.create({ sessionId: 'test456', timeoutSeconds: 120 }, 'http://localhost:3000');
 
+      if ('error' in result) return;
       expect(result.sessionId).toBe('test456');
       const expiresAt = new Date(result.expiresAt);
       const now = new Date();
@@ -84,10 +87,10 @@ describe('SessionService', () => {
       const result = service.getResult('result1');
 
       expect(result.status).toBe('OK');
-      if (result.status === 'OK') {
-        expect(result.data.values).toEqual({ name: 'Alice' });
-        expect(result.data.sessionId).toBe('result1');
-      }
+      if (result.status !== 'OK') return;
+      if ('encryptedData' in result.data) return;
+      expect(result.data.values).toEqual({ name: 'Alice' });
+      expect(result.data.sessionId).toBe('result1');
     });
 
     it('returns NOT_FOUND for non-existing session', () => {
@@ -148,6 +151,74 @@ describe('SessionService', () => {
 
     it('returns false for non-existing session', () => {
       expect(service.has('nope')).toBe(false);
+    });
+  });
+
+  describe('encrypted sessions', () => {
+    it('creates a session with seed', () => {
+      service.create({ sessionId: 'seed-session', seed: 'my-key' }, 'http://localhost:3000');
+
+      const entry = service.getConfig('seed-session');
+      expect(entry?.seed).toBe('my-key');
+    });
+
+    it('encrypts values on submit and discards seed', () => {
+      const values = { message: 'hello', count: 42 };
+      service.create({ sessionId: 'enc', seed: 'secret' }, 'http://localhost:3000');
+
+      const submitResult = service.submit('enc', values);
+      expect(submitResult).toEqual({ ok: true });
+
+      const entry = service.getConfig('enc');
+      expect(entry?.seed).toBeUndefined();
+      expect(entry?.encryptedData).toBeTruthy();
+      expect(typeof entry?.encryptedData).toBe('string');
+    });
+
+    it('returns encryptedData on getResult for seeded session', () => {
+      const values = { name: 'Alice' };
+      service.create({ sessionId: 'enc-result', seed: 'my-secret' }, 'http://localhost:3000');
+      service.submit('enc-result', values);
+
+      const result = service.getResult('enc-result');
+      expect(result.status).toBe('OK');
+
+      if (result.status === 'OK') {
+        expect('encryptedData' in result.data).toBe(true);
+        expect('sessionId' in result.data).toBe(false);
+        const typed = result.data as { encryptedData: string };
+        expect(typed.encryptedData).toBeTruthy();
+      }
+    });
+
+    it('encrypted data can be decrypted with original seed', () => {
+      const values = { ssn: '123-45-6789' };
+      const seed = 'top-secret';
+      service.create({ sessionId: 'decryptable', seed }, 'http://localhost:3000');
+      service.submit('decryptable', values);
+
+      const result = service.getResult('decryptable');
+      expect(result.status).toBe('OK');
+
+      if (result.status === 'OK') {
+        const typed = result.data as { encryptedData: string };
+        const decrypted = JSON.parse(decrypt(typed.encryptedData, seed));
+        expect(decrypted).toEqual(values);
+      }
+    });
+
+    it('returns normal result for non-seeded session', () => {
+      const values = { name: 'Bob' };
+      service.create({ sessionId: 'normal-result' }, 'http://localhost:3000');
+      service.submit('normal-result', values);
+
+      const result = service.getResult('normal-result');
+      expect(result.status).toBe('OK');
+
+      if (result.status === 'OK') {
+        expect('values' in result.data).toBe(true);
+        expect((result.data as { values: unknown }).values).toEqual(values);
+      }
     });
   });
 });

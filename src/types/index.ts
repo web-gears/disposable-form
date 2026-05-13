@@ -27,8 +27,9 @@ export interface FormField {
 
 export interface CreateFormRequest {
   sessionId: string;
-  fields: FormField[];
+  fields?: FormField[];
   timeoutSeconds?: number;
+  seed?: string;
 }
 
 export interface CreateFormResponse {
@@ -44,6 +45,8 @@ export interface SessionEntry {
   expiresAt: Date;
   submittedAt: Date | null;
   timer: NodeJS.Timeout;
+  seed?: string;
+  encryptedData?: string;
 }
 
 export interface SessionResponse {
@@ -51,6 +54,10 @@ export interface SessionResponse {
   submittedAt: string;
   expiresAt: string;
   values: Record<string, unknown>;
+}
+
+export interface EncryptedSessionResponse {
+  encryptedData: string;
 }
 
 export enum ErrorCode {

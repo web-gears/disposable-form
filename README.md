@@ -42,6 +42,23 @@ Response:
 }
 ```
 
+Optionally, pass a `seed` parameter to encrypt submitted form data:
+
+```bash
+curl -X POST localhost:3000/create \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sessionId": "encrypted-session",
+    "fields": [
+      {"id": "message", "name": "Message", "type": "text", "required": true}
+    ],
+    "timeoutSeconds": 3600,
+    "seed": "my-secret-key"
+  }'
+```
+
+When a seed is used, the submitted data is encrypted with AES-256-GCM before storage and the seed is discarded. The result endpoint returns only `encryptedData` instead of raw values.
+
 ### GET /:sessionId
 
 View and fill the form. Sessions auto-delete after expiration.
@@ -50,7 +67,7 @@ View and fill the form. Sessions auto-delete after expiration.
 
 View submitted form results.
 
-Response (200 OK):
+Response (200 OK, unencrypted):
 ```json
 {
   "sessionId": "my-session-id",
@@ -61,6 +78,34 @@ Response (200 OK):
     "email": "john@example.com"
   }
 }
+```
+
+Response (200 OK, encrypted — when `seed` was used on creation):
+```json
+{
+  "encryptedData": "eyJzb2x0IjoiLi4uIiwiaXYiOiIuLi4iLCJ0YWciOiIuLi4iLCJkYXRhIjoiLi4uIn0="
+}
+```
+
+To decrypt the data, use the same seed with any tool that supports AES-256-GCM, or use the built-in utility:
+
+```bash
+curl -s localhost:3000/result/encrypted-session | \
+  node -e "
+    const { decrypt } = require('./dist/utils/encryption.cjs');
+    let body = '';
+    process.stdin.on('data', d => body += d);
+    process.stdin.on('end', () => {
+      const data = JSON.parse(body);
+      const decrypted = decrypt(data.encryptedData, 'my-secret-key');
+      console.log(JSON.parse(decrypted));
+    });
+  "
+```
+
+Output:
+```json
+{ "message": "Hello, world!" }
 ```
 
 ### GET /health

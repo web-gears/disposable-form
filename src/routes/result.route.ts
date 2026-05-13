@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { SessionResponse } from '../types/index.js';
+import type { EncryptedSessionResponse, SessionResponse } from '../types/index.js';
 import { sessionService } from '../services/session.service.js';
 
 export function resultRoute(req: Request, res: Response): void {
@@ -22,5 +22,6 @@ export function resultRoute(req: Request, res: Response): void {
     return;
   }
 
-  res.status(200).json((result as { status: 'OK'; data: SessionResponse }).data);
+  if (result.status !== 'OK') return;
+  res.status(200).json(result.data);
 }

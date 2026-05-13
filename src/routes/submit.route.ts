@@ -22,7 +22,7 @@ export function submitRoute(req: Request, res: Response): void {
     return;
   }
 
-  const validation = validateFieldValues(req.body.values, entry.config.fields);
+  const validation = validateFieldValues(req.body.values, entry.config.fields ?? []);
   if (!validation.success) {
     res.status(422).json({ code: 'SUBMIT_VALIDATION_ERROR', error: validation.error });
     return;

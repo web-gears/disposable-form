@@ -38,6 +38,7 @@ export const createFormRequestSchema = z.object({
   sessionId: z.string().max(64).regex(sessionIdRegex, 'Invalid sessionId format'),
   fields: z.array(formFieldSchema).min(1).max(20),
   timeoutSeconds: z.number().min(10).max(3600).optional(),
+  seed: z.string().min(1).max(256).optional(),
 }).strict();
 
 export const fieldValueSchema = z.record(z.unknown());

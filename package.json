@@ -2,7 +2,7 @@
   "name": "form-session-service",
   "version": "1.1.0",
   "scripts": {
-    "build": "npm run build:server && npm run build:ui",
+    "build": "npm run build:server && npm run build:ui && npm run build:encryption",
     "build:server": "esbuild src/server.ts --bundle --platform=node --format=cjs --outfile=dist/server.cjs --external:esbuild",
     "build:ui": "npm run build:form && npm run build:landing && npm run build:error && npm run build:stats && npm run copy:html",
     "copy:html": "cp src/ui/landing.html src/ui/error.html src/ui/index.html src/ui/stats.html src/ui/styles.css src/ui/favicon.svg dist/ui/",
@@ -10,6 +10,7 @@
     "build:landing": "esbuild src/ui/Landing.tsx --bundle --format=iife --global-name=LandingApp --outfile=dist/ui/landing.js",
     "build:error": "esbuild src/ui/ErrorPage.tsx --bundle --format=iife --global-name=ErrorApp --outfile=dist/ui/error.js",
     "build:stats": "esbuild src/ui/StatsPage.tsx --bundle --format=iife --global-name=StatsApp --outfile=dist/ui/stats.js",
+    "build:encryption": "esbuild src/utils/encryption.ts --bundle --platform=node --format=cjs --outfile=dist/utils/encryption.cjs --external:crypto",
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.cjs",
     "test": "vitest run",

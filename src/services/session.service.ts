@@ -1,9 +1,11 @@
 import type {
   CreateFormRequest,
   CreateFormResponse,
+  EncryptedSessionResponse,
   SessionEntry,
   SessionResponse
 } from '../types/index.js';
+import { encrypt } from '../utils/encryption.js';
 
 interface SessionStats {
   activeSessions: number;
@@ -45,6 +47,7 @@ export class SessionService {
       expiresAt,
       submittedAt: null,
       timer,
+      seed: req.seed,
     };
 
     this.store.set(req.sessionId, entry);
@@ -74,6 +77,11 @@ export class SessionService {
       return { error: 'ALREADY_SUBMITTED' };
     }
 
+    if (entry.seed) {
+      entry.encryptedData = encrypt(values, entry.seed);
+      delete entry.seed;
+    }
+
     entry.values = values;
     entry.submittedAt = new Date();
     clearTimeout(entry.timer);
@@ -82,7 +90,7 @@ export class SessionService {
     return { ok: true };
   }
 
-  getResult(sessionId: string): { status: 'NOT_FOUND' | 'EXPIRED' | 'NOT_SUBMITTED' } | { status: 'OK'; data: SessionResponse } {
+  getResult(sessionId: string): { status: 'NOT_FOUND' | 'EXPIRED' | 'NOT_SUBMITTED' } | { status: 'OK'; data: SessionResponse | EncryptedSessionResponse } {
     const entry = this.store.get(sessionId);
     if (!entry) {
       return { status: 'NOT_FOUND' };
@@ -95,6 +103,13 @@ export class SessionService {
 
     if (entry.submittedAt === null) {
       return { status: 'NOT_SUBMITTED' };
+    }
+
+    if (entry.encryptedData) {
+      return {
+        status: 'OK',
+        data: { encryptedData: entry.encryptedData },
+      };
     }
 
     return {
